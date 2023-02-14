@@ -1,5 +1,6 @@
 use std::{
   path::Path,
+  env,
   process::Command,
   fs::{File, read_to_string, OpenOptions},
   io::Write
@@ -25,11 +26,15 @@ fn main() {
   let mut selections = Vec::<String>::new();
   let _binding = Path::new(&home_dir().unwrap()).join(".ignofierplus");
   let pathforgit = _binding.to_str().unwrap();
+  println!("{}", pathforgit);
 
   if Path::new(&home_dir().unwrap()).join(".ignofierplus").is_dir() {
-    Command::new("git").args(["pull", pathforgit]);
+    let _original = env::current_dir().unwrap();
+    env::set_current_dir(_binding.clone()).unwrap();
+    Command::new("git").args(["pull"]).spawn().unwrap().wait().unwrap();
+    env::set_current_dir(_original).unwrap();
   } else {
-    Command::new("git").args(["clone", "https://github.com/github/gitignore", pathforgit]);
+    Command::new("git").args(["clone", "https://github.com/github/gitignore", pathforgit]).spawn().unwrap().wait().unwrap();
   }
 
   for entry in WalkDir::new(Path::new(&home_dir().unwrap()).join(".ignofierplus")) {
