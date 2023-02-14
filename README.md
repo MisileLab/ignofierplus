@@ -9,6 +9,10 @@ Rust port of [ignofier](https://github.com/sujang958/ignofier) and some improvem
 1. Rust = Compiled Language so performance improvement
 2. Append gitignore file if .gitignore exist
 
+## Preview
+
+[Preview](preview.mp4)
+
 ## Requirements
 
 - Git
