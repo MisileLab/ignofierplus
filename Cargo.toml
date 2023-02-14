@@ -1,14 +1,16 @@
 [package]
-name = "rust-template"
+name = "ignofierplus"
 version = "0.1.0"
-description = "yeah."
-repository = "https://github.com/misilelab/rust-template"
-documentation = "https://docs.rs/rust-template"
+description = "rust port of https://github.com/sujang958/ignofier"
+repository = "https://github.com/misilelab/ignofireplus"
 authors = ["MisileLaboratory"]
 readme = "README.md"
-license-file = "LICENSE.md"
+license-file = "LICENSE"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+dirs = "4.0.0"
+requestty = "0.5.0"
+walkdir = "2.3.2"
