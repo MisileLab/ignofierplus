@@ -10,8 +10,8 @@ Rust port of [ignofier](https://github.com/sujang958/ignofier) and some improvem
 2. Append gitignore file if .gitignore exist
 
 ## Preview
+[preview](https://user-images.githubusercontent.com/74066467/218827465-fd8c335b-0ab1-4b01-9ce2-cd5ffc6fb863.mp4)
 
-[Preview](preview.mp4)
 
 ## Requirements
 
