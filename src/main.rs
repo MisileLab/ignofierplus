@@ -18,7 +18,7 @@ fn auto_complete(p: String, p2: &Vec<String>) -> Completions<String> {
   };
   let mut _completions = completions!();
   _completions.extend(p3);
-  return _completions;
+  _completions
 }
 
 fn main() {
@@ -35,7 +35,7 @@ fn main() {
   for entry in WalkDir::new(Path::new(&home_dir().unwrap()).join(".ignofierplus")) {
     let entry = entry.unwrap();
     if entry.path().to_str().unwrap().to_string().ends_with(".gitignore") {
-      selections.push(entry.path().to_str().unwrap().to_string().trim_start_matches(pathforgit).trim_start_matches("/").trim_start_matches("\\").to_string());
+      selections.push(entry.path().to_str().unwrap().to_string().trim_start_matches(pathforgit).trim_start_matches('/').trim_start_matches('\\').to_string());
     }
   }
 
@@ -55,19 +55,14 @@ fn main() {
 
   if !Path::new(".gitignore").is_file() {
     let mut file = File::create(".gitignore").unwrap();
-    file.write_all(format!("# {} by ignofierplus\n{}", selection.to_string(), read_to_string(format!("{pathforgit}/{selection}")).unwrap()).as_bytes()).unwrap();
+    file.write_all(format!("# {} by ignofierplus\n{}", selection, read_to_string(format!("{pathforgit}/{selection}")).unwrap()).as_bytes()).unwrap();
   } else {
     let input = Question::select("theme")
     .message(".gitignore exists, append or overwrite?")
     .choices(vec!["append", "overwrite"])
     .build();
     let _selection = requestty::prompt_one(input).unwrap().try_into_list_item().unwrap().text;
-    let _append: bool;
-    if _selection == "append" {
-      _append = true;
-    } else {
-      _append = false;
-    }
+    let _append: bool = _selection == "append";
     let mut file = OpenOptions::new()
       .write(true)
       .append(_append)
@@ -78,11 +73,10 @@ fn main() {
       file.set_len(0).unwrap();
     }
     
-    if let Err(e) = writeln!(file, "{}", format!(
-      "# {} by ignofierplus\n{}", 
-      selection.to_string(), 
-      read_to_string(format!("{pathforgit}/{selection}")).unwrap().trim_end_matches("\n")
-    )) {
+    if let Err(e) = writeln!(file, "# {} by ignofierplus\n{}",
+      selection,
+      read_to_string(format!("{pathforgit}/{selection}")).unwrap().trim_end_matches('\n')
+    ) {
       eprintln!("Couldn't write to file: {}", e);
     }
   }
