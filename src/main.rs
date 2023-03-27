@@ -13,7 +13,7 @@ fn auto_complete(p: String, p2: &Vec<String>) -> Completions<String> {
   let mut p3 = Vec::<String>::new();
   p3.push(p.clone());
   for i in p2 {
-    if i.to_lowercase().contains(&p.to_lowercase()) {
+    if i.to_lowercase().contains(&p.to_lowercase().strip_suffix(".gitignore").unwrap_or(&p.to_lowercase())) {
       p3.push(i.to_string());
     }
   };
