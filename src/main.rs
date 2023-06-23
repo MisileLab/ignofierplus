@@ -57,12 +57,10 @@ fn main() {
   }
 
   let ques = requestty::Question::input("a")
-    .message("Choose .gitignore template, you can cancel by typing 'cancel'")
+    .message("Choose .gitignore template")
     .auto_complete(|p, _| auto_complete(p, &selections))
     .validate(|p, _| {
-      if _binding.to_str().unwrap() == "cancel" {
-        return Ok(());
-      } else if _binding.join(p).exists() {
+      if _binding.join(p).exists() {
           Ok(())
       } else {
           Err(format!("file `{}` doesn't exist", p))
