@@ -22,6 +22,18 @@ fn auto_complete(p: String, p2: &Vec<String>) -> Completions<String> {
   _completions
 }
 
+fn comment_delete(mut a: String, b: bool) -> String {
+  let _iter = a.clone();
+  if b {
+    for i in _iter.lines() {
+      if i == "" || i.starts_with('#') {
+        a = a.replace(i, "");
+      }
+    }
+  }
+  a
+}
+
 fn main() {
   let mut selections = Vec::<String>::new();
   let _binding = Path::new(&home_dir().unwrap()).join(".ignofierplus");
@@ -45,10 +57,12 @@ fn main() {
   }
 
   let ques = requestty::Question::input("a")
-    .message("Choose .gitignore template")
+    .message("Choose .gitignore template, you can cancel by typing 'cancel'")
     .auto_complete(|p, _| auto_complete(p, &selections))
     .validate(|p, _| {
-      if _binding.join(p).exists() {
+      if _binding.to_str().unwrap() == "cancel" {
+        return Ok(());
+      } else if _binding.join(p).exists() {
           Ok(())
       } else {
           Err(format!("file `{}` doesn't exist", p))
@@ -64,9 +78,13 @@ fn main() {
   } else {
     let input = Question::select("theme")
     .message(".gitignore exists, append or overwrite?")
-    .choices(vec!["append", "overwrite"])
+    .choices(vec!["append", "overwrite", "cancel"])
     .build();
     let _selection = requestty::prompt_one(input).unwrap().try_into_list_item().unwrap().text;
+    if _selection == "cancel" {
+      println!("Canceled");
+      return;
+    }
     let _append: bool = _selection == "append";
     let mut file = OpenOptions::new()
       .write(true)
@@ -77,10 +95,26 @@ fn main() {
     if !_append {
       file.set_len(0).unwrap();
     }
+
+    let input: Question<'_> = Question::select("b")
+      .message("Do you want a delete comments in .gitignore? (y/n)")
+      .choices(vec!["y", "n"])
+      .build();
+
+    let _selection: bool;
+
+    if requestty::prompt_one(input).unwrap().try_into_list_item().unwrap().text == "y" {
+      _selection = true;
+    } else {
+      _selection = false;
+    }
+
+    let _path = read_to_string(format!("{pathforgit}/{selection}")).unwrap();
+    let strings = _path.trim_end_matches('\n');
     
     if let Err(e) = writeln!(file, "# {} by ignofierplus\n{}",
       selection,
-      read_to_string(format!("{pathforgit}/{selection}")).unwrap().trim_end_matches('\n')
+      comment_delete(strings.to_string(), _selection)
     ) {
       eprintln!("Couldn't write to file: {}", e);
     }
