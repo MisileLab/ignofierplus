@@ -22,16 +22,17 @@ fn auto_complete(p: String, p2: &Vec<String>) -> Completions<String> {
   _completions
 }
 
-fn comment_delete(mut a: String, b: bool) -> String {
+fn comment_delete(a: String, b: bool) -> String {
   let _iter = a.clone();
+  let mut list: Vec<String> = Vec::new();
   if b {
     for i in _iter.lines() {
-      if i == "" || i.starts_with('#') {
-        a = a.replace(i, "");
+      if i != "" && !i.starts_with('#') {
+        list.push(i.to_string());
       }
     }
   }
-  a
+  list.join("\n")
 }
 
 fn main() {
