@@ -31,6 +31,8 @@ fn comment_delete(a: String, b: bool) -> String {
         list.push(i.to_string());
       }
     }
+  } else {
+    return a;
   }
   list.join("\n")
 }
