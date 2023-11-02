@@ -75,7 +75,7 @@ fn main() {
 
   if !Path::new(".gitignore").is_file() {
     let mut file = File::create(".gitignore").unwrap();
-    file.write_all(format!("# {} by ignofierplus\n{}", selection, read_to_string(format!("{pathforgit}/{selection}")).unwrap()).as_bytes()).unwrap();
+    file.write_all(format!("\n# {} by ignofierplus\n{}", selection, read_to_string(format!("{pathforgit}/{selection}")).unwrap()).as_bytes()).unwrap();
   } else {
     let input = Question::select("theme")
     .message(".gitignore exists, append or overwrite?")
@@ -113,7 +113,7 @@ fn main() {
     let _path = read_to_string(format!("{pathforgit}/{selection}")).unwrap();
     let strings = _path.trim_end_matches('\n');
     
-    if let Err(e) = writeln!(file, "# {} by ignofierplus\n{}",
+    if let Err(e) = writeln!(file, "\n# {} by ignofierplus\n{}",
       selection,
       comment_delete(strings.to_string(), _selection)
     ) {
