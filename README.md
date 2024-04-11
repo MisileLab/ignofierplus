@@ -3,7 +3,8 @@
 ![Rust](https://img.shields.io/badge/language-rust-1976d2?style=for-the-badge&logo=rust)
 ![License](https://img.shields.io/badge/license-bsd-green?style=for-the-badge)
 
-Rust port of [ignofier](https://github.com/sujang958/ignofier) and some improvements
+Rust port of [ignofier](https://github.com/sujang958/ignofier) and some improvements\
+It's simple gitignore selector.
 
 ## Improvements
 
@@ -12,7 +13,7 @@ Rust port of [ignofier](https://github.com/sujang958/ignofier) and some improvem
 
 ## Preview
 
-[preview](https://asciinema.org/a/598500)
+[preview (cli changed but main feature is same)](https://asciinema.org/a/598500)
 
 ## Requirements
 
@@ -20,4 +21,4 @@ Rust port of [ignofier](https://github.com/sujang958/ignofier) and some improvem
 
 ## Installation
 
-Just get binary in [github actions](https://github.com/MisileLab/ignofierplus/actions/workflows/build.yml)
+Just get binary in [github actions](https://github.com/MisileLab/ignofierplus/actions/workflows/build.yml) or use `cargo install ignofierplus`

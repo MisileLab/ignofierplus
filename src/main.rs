@@ -9,53 +9,51 @@ use dirs::home_dir;
 use walkdir::WalkDir;
 use requestty::{question::{completions, Completions}, Question};
 
-fn auto_complete(p: String, p2: &Vec<String>) -> Completions<String> {
-  let mut p3 = Vec::<String>::new();
-  p3.push(p.clone());
-  for i in p2 {
-    if i.to_lowercase().strip_suffix(".gitignore").unwrap_or(&i.to_lowercase()).contains(&p.to_lowercase()) {
-      p3.push(i.to_string());
+/// Auto complete input of gitignore
+fn auto_complete(input: String, filelist: &Vec<String>) -> Completions<String> {
+  let mut completions = Vec::<String>::new();
+  completions.push(input.clone());
+  for i in filelist {
+    if i.to_lowercase().strip_suffix(".gitignore").unwrap_or(&i.to_lowercase()).contains(&input.to_lowercase()) {
+      completions.push(i.to_string());
     }
   };
   let mut _completions = completions!();
-  _completions.extend(p3);
+  _completions.extend(completions);
   _completions
 }
 
-fn comment_delete(a: String, b: bool) -> String {
-  let _iter = a.clone();
+/// delete gitignore's comment
+fn delete_comments(string: String) -> String {
   let mut list: Vec<String> = Vec::new();
-  if b {
-    for i in _iter.lines() {
-      if i != "" && !i.starts_with('#') {
-        list.push(i.to_string());
-      }
+  for i in string.lines() {
+    if i != "" && !i.starts_with('#') {
+      list.push(i.to_string());
     }
-  } else {
-    return a;
   }
   list.join("\n")
 }
 
 fn main() {
-  let homedir = Path::new(&home_dir().unwrap()).join(".ignofierplus");
   let mut selections = Vec::<String>::new();
-  let pathforgit = homedir.to_str().unwrap();
-  println!("{}", pathforgit);
+  let homedir = Path::new(&home_dir().expect("can't find home path")).join(".ignofierplus");
+  let homedir_str = homedir.to_str().unwrap();
+  println!("{}", homedir_str);
 
+  // I can't how to handling it is git version or not
   if homedir.is_dir() {
     let _original = env::current_dir().unwrap();
     env::set_current_dir(homedir.clone()).unwrap();
     Command::new("git").args(["pull"]).spawn().unwrap().wait().unwrap();
     env::set_current_dir(_original).unwrap();
   } else {
-    Command::new("git").args(["clone", "https://github.com/github/gitignore", pathforgit]).spawn().unwrap().wait().unwrap();
+    Command::new("git").args(["clone", "https://github.com/github/gitignore", homedir_str]).spawn().unwrap().wait().unwrap();
   }
 
   for entry in WalkDir::new(&homedir) {
     let entry = entry.unwrap();
     if entry.path().to_str().unwrap().to_string().ends_with(".gitignore") {
-      selections.push(entry.path().to_str().unwrap().to_string().trim_start_matches(pathforgit).trim_start_matches('/').trim_start_matches('\\').to_string());
+      selections.push(entry.path().to_str().unwrap().to_string().trim_start_matches(homedir_str).trim_start_matches('/').trim_start_matches('\\').to_string());
     }
   }
 
@@ -102,22 +100,22 @@ fn main() {
     .choices(vec!["y", "n"])
     .build();
 
-  let _selection: bool;
+  let delete_comment: bool;
 
   if requestty::prompt_one(input).unwrap().try_into_list_item().unwrap().text == "y" {
-    _selection = true;
+    delete_comment = true;
   } else {
-    _selection = false;
+    delete_comment = false;
   }
 
-  let _path = read_to_string(format!("{pathforgit}/{selection}")).unwrap();
-    let strings = _path.trim_end_matches('\n');
-    
-    if let Err(e) = writeln!(file, "\n# {} by ignofierplus\n{}",
-      selection,
-      comment_delete(strings.to_string(), _selection)
-    ) {
-      eprintln!("Couldn't write to file: {}", e);
+  let _path = read_to_string(format!("{homedir_str}/{selection}")).unwrap();
+  let strings = _path.trim_end_matches('\n').to_string();
+  
+  if let Err(e) = writeln!(file, "\n# {} by ignofierplus\n{}",
+    selection,
+    if delete_comment { delete_comments(strings) } else { strings }
+  ) {
+    eprintln!("Couldn't write to file: {}", e);
   }
 
   println!("Your .gitignore ready!")
