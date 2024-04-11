@@ -6,10 +6,8 @@
 Rust port of [ignofier](https://github.com/sujang958/ignofier) and some improvements\
 It's simple gitignore selector.
 
-## Improvements
-
-1. Rust = Compiled Language so performance improvement
-2. Append gitignore file if .gitignore exist
+## But why?
+I just get one gitignore in [this](https://github.com/github/gitignore), but i'm too lazy for pulling and copying repository.
 
 ## Preview
 
