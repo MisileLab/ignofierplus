@@ -12,5 +12,5 @@ edition = "2021"
 
 [dependencies]
 dirs = "6.0.0"
-requestty = "0.5.0"
+requestty = "0.6.0"
 walkdir = "2.5.0"
